@@ -1,21 +1,17 @@
-import { useState } from "react";
-
-const VILLES = [
-  "Casablanca", "Rabat", "Marrakech", "Fès", "Tanger", "Agadir",
-  "Meknès", "Oujda", "Kénitra", "Tétouan", "Safi", "El Jadida",
-  "Nador", "Mohammedia", "Béni Mellal",
-];
-
-const METIERS = [
-  "Électricien", "Plombier", "Peintre", "Maçon", "Menuisier",
-  "Carreleur", "Climatisation", "Serrurier", "Jardinier", "Autres",
-];
+import { useState, useEffect } from "react";
+import { fetchRegisterData } from "../../api/lookupApi";
+import { useTranslation } from "react-i18next";
 
 export default function RegisterForm({ onSwitchToLogin }) {
   const [role, setRole] = useState("client");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const { i18n } = useTranslation();
+
+  const [cities, setCities] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loadingLookup, setLoadingLookup] = useState(true);
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -23,9 +19,32 @@ export default function RegisterForm({ onSwitchToLogin }) {
     phone: "",
     email: "",
     password: "",
-    ville: "",
-    metier: "",
+    cityId: "",
+    categoryId: "",
   });
+
+  // Load cities & categories from API
+  useEffect(() => {
+    let ignore = false;
+
+    async function load() {
+      try {
+        const data = await fetchRegisterData();
+        if (!ignore) {
+          setCities(data.cities);
+          setCategories(data.categories);
+        }
+      } catch (err) {
+        console.error("Lookup loading failed", err);
+        setError("Impossible de charger les villes et métiers");
+      } finally {
+        setLoadingLookup(false);
+      }
+    }
+
+    load();
+    return () => { ignore = true; };
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,7 +55,7 @@ export default function RegisterForm({ onSwitchToLogin }) {
     setLoading(true);
     setError(null);
 
-    // Build the payload depending on role
+    // Build payload for backend
     const payload = {
       firstname: formData.firstname,
       lastname: formData.lastname,
@@ -45,8 +64,8 @@ export default function RegisterForm({ onSwitchToLogin }) {
       password: formData.password,
       role: role.toUpperCase(), // "CLIENT" or "ARTISAN"
       ...(role === "artisan" && {
-        ville: formData.ville,
-        metier: formData.metier,
+        cityId: Number(formData.cityId),
+        categoryId: Number(formData.categoryId),
       }),
     };
 
@@ -67,15 +86,18 @@ export default function RegisterForm({ onSwitchToLogin }) {
 
       setSuccess(true);
       setTimeout(() => {
-        onSwitchToLogin(); // redirect to login tab after 2 seconds
+        onSwitchToLogin();
       }, 2000);
-
-    } catch (err) {
+    } catch {
       setError("Erreur de connexion au serveur");
     } finally {
       setLoading(false);
     }
   };
+
+  if (loadingLookup) {
+    return <p>Chargement des villes et métiers...</p>;
+  }
 
   if (success) {
     return (
@@ -107,7 +129,7 @@ export default function RegisterForm({ onSwitchToLogin }) {
         </button>
       </div>
 
-      {/* Prénom + Nom */}
+      {/* Name fields */}
       <div className="form-row">
         <div className="form-group">
           <label>Prénom</label>
@@ -133,7 +155,7 @@ export default function RegisterForm({ onSwitchToLogin }) {
         </div>
       </div>
 
-      {/* Téléphone */}
+      {/* Phone */}
       <div className="form-group">
         <label>Téléphone</label>
         <input
@@ -159,7 +181,7 @@ export default function RegisterForm({ onSwitchToLogin }) {
         />
       </div>
 
-      {/* Mot de passe */}
+      {/* Password */}
       <div className="form-group">
         <label>Mot de passe</label>
         <input
@@ -173,34 +195,39 @@ export default function RegisterForm({ onSwitchToLogin }) {
         />
       </div>
 
-      {/* Artisan only fields */}
+      {/* Artisan only */}
       {role === "artisan" && (
         <>
           <div className="form-group">
             <label>Ville</label>
             <select
-              name="ville"
-              value={formData.ville}
+              name="cityId"
+              value={formData.cityId}
               onChange={handleChange}
               required
             >
               <option value="">-- Choisir une ville --</option>
-              {VILLES.map((v) => (
-                <option key={v} value={v}>{v}</option>
+              {cities.map((city) => (
+                <option key={city.id} value={city.id}>
+                  {i18n.language === "ar" ? city.nameAr : city.nameFr}
+                </option>
               ))}
             </select>
           </div>
+
           <div className="form-group">
             <label>Métier</label>
             <select
-              name="metier"
-              value={formData.metier}
+              name="categoryId"
+              value={formData.categoryId}
               onChange={handleChange}
               required
             >
               <option value="">-- Choisir un métier --</option>
-              {METIERS.map((m) => (
-                <option key={m} value={m}>{m}</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {i18n.language === "ar" ? cat.nameAr : cat.nameFr}
+                </option>
               ))}
             </select>
           </div>
