@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../Auth.css";
 import LoginForm from "../features/auth/Login";
 import RegisterForm from "../features/auth/Register";
+import { useLocation } from "react-router-dom";
 
-export default function AuthPage() {
+export default function AuthPage(status) {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("login");
 
+  useEffect(() => {
+    if (location.state?.tab) {
+      setActiveTab(location.state.tab);
+    }
+  }, [location.state]);
   return (
     <div className="auth-container">
       <div className="auth-box">
@@ -29,11 +36,11 @@ export default function AuthPage() {
         </div>
 
         {/* Render the right form */}
-        {activeTab === "login" ? (
-          <LoginForm onSwitchToRegister={() => setActiveTab("register")} />
-        ) : (
-          <RegisterForm onSwitchToLogin={() => setActiveTab("login")} />
-        )}
+        {activeTab === "login"
+          ? <LoginForm onSwitchToRegister={() => setActiveTab("register")} />
+          : <RegisterForm onSwitchToLogin={() => setActiveTab("login")} />
+        }
+
       </div>
     </div>
   );

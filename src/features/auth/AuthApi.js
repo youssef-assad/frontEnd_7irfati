@@ -40,3 +40,8 @@ export const refreshAccessToken = async () => {
     useAuthStore.getState().clearAuth();
     return false; // session expired → user must login again
   }}
+
+
+  export function isAuthenticated() {
+  return !!localStorage.getItem("access-token");
+}

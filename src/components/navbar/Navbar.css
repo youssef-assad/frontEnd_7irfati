@@ -1,0 +1,258 @@
+:root {
+  --primary: #1e88e5;
+  --text: #333;
+  --bg: #ffffff;
+}
+
+/* Wrapper */
+.navbar-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  height: 64px;
+}
+
+/* Logo */
+.navbar-logo {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: var(--primary);
+}
+
+/* Links */
+.navbar-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* Actions */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Language */
+.lang-switcher button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+/* Auth */
+.auth-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.danger {
+  color: #d32f2f;
+}
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  transition: 0.3s;
+}
+
+/* Mobile menu */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1rem;
+  background: white;
+  animation: slideDown 0.3s ease;
+}
+
+.mobile-menu a,
+.mobile-menu button {
+  text-align: start;
+  background: none;
+  border: none;
+  font-size: 1rem;
+}
+
+.mobile-menu .primary {
+  background: var(--primary);
+  color: white;
+  padding: 0.5rem;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ── Dropdown ─────────────────────────────── */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown > button {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: 1.5px solid transparent;
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.dropdown > button::after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 0.2s;
+}
+
+.dropdown > button:hover {
+  background: #f0f6ff;
+  border-color: #c5daf8;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: auto;
+  min-width: 170px;
+  background: #fff;
+  border: 1px solid #e8edf5;
+  border-radius: 10px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.07),
+    0 10px 24px -4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 999;
+  animation: dropIn 0.15s ease;
+}
+
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dropdown-menu button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--text);
+  transition: background 0.15s;
+}
+
+.dropdown-menu button:hover {
+  background: #f5f7fa;
+}
+
+/* séparateur entre items si tu en ajoutes plusieurs */
+.dropdown-menu button + button {
+  border-top: 1px solid #f0f0f0;
+}
+
+.dropdown-menu .danger {
+  color: #e53935;
+}
+
+.dropdown-menu .danger:hover {
+  background: #fff5f5;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .navbar-links {
+    display: none;
+  }
+
+  .auth-buttons {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .mobile-menu.show {
+    display: flex;
+  }
+  .dropdown-menu {
+    position: static; /* so it flows inside mobile menu */
+    box-shadow: none;
+    border: none;
+  }
+}

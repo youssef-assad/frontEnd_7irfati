@@ -2,5 +2,15 @@
   "welcome": "Bienvenue",
   "login": "Connexion",
   "email": "Email",
-  "password": "Mot de passe"
+  "password": "Mot de passe",
+
+  
+  "home": "Accueil",
+  "services": "Services",
+  "requests": "Demandes",
+  "messages": "Messages",
+  "login": "Connexion",
+  "register": "Inscription",
+  "profile": "Profil",
+  "logout": "Déconnexion"
 }

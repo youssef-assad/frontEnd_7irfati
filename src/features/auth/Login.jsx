@@ -1,37 +1,38 @@
 import { useState } from "react";
 import { loginUser } from "./AuthApi";
-
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm({ onSwitchToRegister }) {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError(null);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-  try {
-    const data = await loginUser(formData);
-    localStorage.setItem("access-token", data.accessToken);
-
-  } catch (err) {
-    if (err.response) {
-      setError(err.response.data.message);
-    } else {
-      setError("Impossible de se connecter. Réessayez plus tard.");
+    try {
+      const data = await loginUser(formData);
+      localStorage.setItem("access-token", data.accessToken);
+      navigate('/')
+      window.location.reload();
+    } catch (err) {
+      if (err.response) {
+        setError(err.response.data.message);
+      } else {
+        setError("Impossible de se connecter. Réessayez plus tard.");
+      }
+    } finally {
+      setLoading(false);
     }
-
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   return (
     <form onSubmit={handleSubmit}>

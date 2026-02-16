@@ -1,7 +1,7 @@
-import { Navigate } from "react-router-dom";
-
+/* import { Navigate } from "react-router-dom";
+import { isAuthenticated } from "../features/auth/AuthApi";
 export default function ProtectedRoute({ children, role }) {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("access-token");
   const userRole = localStorage.getItem("role");
 
   if (!token) {
@@ -13,4 +13,17 @@ export default function ProtectedRoute({ children, role }) {
   }
 
   return children;
+}
+ */
+
+
+import { Navigate, Outlet } from "react-router-dom";
+import { isAuthenticated } from "../features/auth/AuthApi";
+
+export default function ProtectedRoute() {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
 }
