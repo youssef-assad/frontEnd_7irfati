@@ -3,10 +3,12 @@ import "../Auth.css";
 import LoginForm from "../features/auth/Login";
 import RegisterForm from "../features/auth/Register";
 import { useLocation } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext";
 
-export default function AuthPage(status) {
+export default function AuthPage(props) {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("login");
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (location.state?.tab) {
@@ -16,8 +18,8 @@ export default function AuthPage(status) {
   return (
     <div className="auth-container">
       <div className="auth-box">
-        <h1 className="auth-title">Bienvenue au 7irfati.ma</h1>
-        <p className="auth-subtitle">La plateforme des artisans au Maroc</p>
+        <h1 className="auth-title">{t.auth.title}</h1>
+        <p className="auth-subtitle">{t.auth.subtitle}</p>
 
         {/* Tabs */}
         <div className="tabs">
@@ -25,13 +27,13 @@ export default function AuthPage(status) {
             className={`tab-btn ${activeTab === "login" ? "active" : ""}`}
             onClick={() => setActiveTab("login")}
           >
-            Connexion
+           {t.auth.login}
           </button>
           <button
             className={`tab-btn ${activeTab === "register" ? "active" : ""}`}
             onClick={() => setActiveTab("register")}
           >
-            Inscription
+             {t.auth.register}
           </button>
         </div>
 

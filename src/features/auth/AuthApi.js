@@ -24,21 +24,19 @@ export const logoutUser = async () => {
   }
 };
 
-// ─────────────────────────────────────────
-// REFRESH — called once on app startup
-// ─────────────────────────────────────────
+
 export const refreshAccessToken = async () => {
   try {
-    // Cookie is sent automatically → server returns new access token
+ 
     const response = await api.post("/auth/refresh");
 
     const { access_token, user } = response.data;
     useAuthStore.getState().setAuth(access_token, user);
 
-    return true; // user is still logged in
+    return true; 
   } catch {
     useAuthStore.getState().clearAuth();
-    return false; // session expired → user must login again
+    return false; 
   }}
 
 

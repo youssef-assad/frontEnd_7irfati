@@ -3,14 +3,44 @@
   "login": "Connexion",
   "email": "Email",
   "password": "Mot de passe",
+  "message":"Bienvenue tout dans notre application ! ",
 
   
   "home": "Accueil",
   "services": "Services",
   "requests": "Demandes",
   "messages": "Messages",
-  "login": "Connexion",
   "register": "Inscription",
   "profile": "Profil",
-  "logout": "Déconnexion"
+  "logout": "Déconnexion",
+   "auth": {
+    "title": "Bienvenue sur 7irfati.ma",
+    "subtitle": "La plateforme des artisans au Maroc",
+
+    "login": "Connexion",
+    "register": "Inscription",
+
+    "email": "Email",
+    "password": "Mot de passe",
+    "passwordPlaceholder": "Votre mot de passe",
+    "emailPlaceholder": "exemple@email.com",
+
+    "loginButton": "Se connecter",
+    "registerButton": "S'inscrire",
+
+    "noAccount": "Pas encore de compte ?",
+    "haveAccount": "Déjà un compte ?",
+
+    "client": "Client",
+    "artisan": "Artisan",
+
+    "firstname": "Prénom",
+    "lastname": "Nom",
+    "phone": "Téléphone",
+
+    "city": "Ville",
+    "job": "Métier",
+    "selectCity": "-- Choisir une ville --",
+    "selectJob": "-- Choisir un métier --"
+  }
 }

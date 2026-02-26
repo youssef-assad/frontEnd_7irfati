@@ -3,6 +3,7 @@
   "login": "تسجيل الدخول",
   "email": "البريد الإلكتروني",
   "password": "كلمة المرور",
+   "message":"أهلاً بكم في كل ما يحتويه تطبيقنا!",
 
   "home": "الرئيسية",
   "services": "الخدمات",
@@ -11,5 +12,35 @@
   "login": "تسجيل الدخول",
   "register": "إنشاء حساب",
   "profile": "الملف الشخصي",
-  "logout": "تسجيل الخروج"
+  "logout": "تسجيل الخروج",
+   "auth": {
+    "title": "مرحبًا بك في 7irfati.ma",
+    "subtitle": "منصة الحرفيين في المغرب",
+
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "passwordPlaceholder": "كلمة المرور الخاصة بك",
+    "emailPlaceholder": "example@email.com",
+
+    "loginButton": "دخول",
+    "registerButton": "تسجيل",
+
+    "noAccount": "ليس لديك حساب؟",
+    "haveAccount": "لديك حساب بالفعل؟",
+
+    "client": "زبون",
+    "artisan": "حرفي",
+
+    "firstname": "الاسم",
+    "lastname": "النسب",
+    "phone": "الهاتف",
+
+    "city": "المدينة",
+    "job": "المهنة",
+    "selectCity": "-- اختر مدينة --",
+    "selectJob": "-- اختر مهنة --"
+  }
 }

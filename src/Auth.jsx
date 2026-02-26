@@ -1,20 +1,45 @@
 import { useState } from "react";
 import "./Auth.css";
+import { useLanguage } from "./context/LanguageContext";
 
 const VILLES = [
-  "Casablanca", "Rabat", "Marrakech", "Fès", "Tanger", "Agadir",
-  "Meknès", "Oujda", "Kénitra", "Tétouan", "Safi", "El Jadida",
-  "Nador", "Mohammedia", "Béni Mellal",
+  "Casablanca",
+  "Rabat",
+  "Marrakech",
+  "Fès",
+  "Tanger",
+  "Agadir",
+  "Meknès",
+  "Oujda",
+  "Kénitra",
+  "Tétouan",
+  "Safi",
+  "El Jadida",
+  "Nador",
+  "Mohammedia",
+  "Béni Mellal",
 ];
 
 const METIERS = [
-  "Électricien", "Plombier", "Peintre", "Maçon", "Menuisier",
-  "Carreleur", "Climatisation", "Serrurier", "Jardinier", "Autres",
+  "Électricien",
+  "Plombier",
+  "Peintre",
+  "Maçon",
+  "Menuisier",
+  "Carreleur",
+  "Climatisation",
+  "Serrurier",
+  "Jardinier",
+  "Autres",
 ];
 
 export default function Auth() {
   const [activeTab, setActiveTab] = useState("login");
   const [role, setRole] = useState("client");
+  const { t } = useLanguage();
+  console.log("hi");
+  
+  console.log(t);
 
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [registerData, setRegisterData] = useState({
@@ -51,8 +76,8 @@ export default function Auth() {
     <div className="auth-container">
       <div className="auth-box">
         {/* Titre */}
-        <h1 className="auth-title">Bienvenue au 7irfati.ma</h1>
-        <p className="auth-subtitle">La plateforme des artisans au Maroc</p>
+        <h1 className="auth-title">{t.auth.title}</h1>
+        <p className="auth-subtitle">{t.auth.subtitle}</p>
 
         {/* Tabs */}
         <div className="tabs">
@@ -74,7 +99,7 @@ export default function Auth() {
         {activeTab === "login" && (
           <form onSubmit={handleLoginSubmit}>
             <div className="form-group">
-              <label>Email</label>
+              <label>{t.auth.email}</label>
               <input
                 type="email"
                 name="email"
@@ -206,7 +231,9 @@ export default function Auth() {
                   >
                     <option value="">-- Choisir une ville --</option>
                     {VILLES.map((v) => (
-                      <option key={v} value={v}>{v}</option>
+                      <option key={v} value={v}>
+                        {v}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -220,7 +247,9 @@ export default function Auth() {
                   >
                     <option value="">-- Choisir un métier --</option>
                     {METIERS.map((m) => (
-                      <option key={m} value={m}>{m}</option>
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
                     ))}
                   </select>
                 </div>

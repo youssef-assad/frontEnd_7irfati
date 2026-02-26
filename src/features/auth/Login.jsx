@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { loginUser } from "./AuthApi";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function LoginForm({ onSwitchToRegister }) {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -39,11 +40,11 @@ export default function LoginForm({ onSwitchToRegister }) {
       {error && <p className="form-error">{error}</p>}
 
       <div className="form-group">
-        <label>Email</label>
+        <label>{t.auth.email}</label>
         <input
           type="email"
           name="email"
-          placeholder="exemple@email.com"
+          placeholder={t.auth.emailPlaceholder}
           value={formData.email}
           onChange={handleChange}
           required
@@ -51,11 +52,11 @@ export default function LoginForm({ onSwitchToRegister }) {
       </div>
 
       <div className="form-group">
-        <label>Mot de passe</label>
+        <label>{t.auth.password}</label>
         <input
           type="password"
           name="password"
-          placeholder="Votre mot de passe"
+          placeholder={t.auth.passwordPlaceholder}
           value={formData.password}
           onChange={handleChange}
           required
@@ -63,13 +64,13 @@ export default function LoginForm({ onSwitchToRegister }) {
       </div>
 
       <button type="submit" className="btn-submit" disabled={loading}>
-        {loading ? "Connexion..." : "Se connecter"}
+        {loading ? t.auth.login : t.auth.loginButton}
       </button>
 
       <div className="switch-link">
-        Pas encore de compte ?{" "}
+        {t.auth.noAccount}{" "}
         <button type="button" onClick={onSwitchToRegister}>
-          S'inscrire
+          {t.auth.registerButton}
         </button>
       </div>
     </form>

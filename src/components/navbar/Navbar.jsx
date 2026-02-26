@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import "./Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
-import fr from "../../i18n/locales/fr.json";
-import ar from "../../i18n/locales/ar.json";
+import { useLanguage } from "../../context/LanguageContext";
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+
   const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem("access-token"),
+    !!localStorage.getItem("access-token")
   );
 
   const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
@@ -15,28 +16,15 @@ export default function Navbar() {
 
   const desktopDropdownRef = useRef();
   const mobileDropdownRef = useRef();
-  // 1️⃣ language state
-  const [language, setLanguage] = useState(
-    localStorage.getItem("language") || "fr",
-  );
 
-  // 2️⃣ translations
-  const translations = { fr, ar };
-  const t = translations[language];
+  // ✅ GLOBAL language (correct)
+  const { t, setLanguage } = useLanguage();
 
-  // 3️⃣ compute isRTL
-  const isRTL = language === "ar";
-
-  // 4️⃣ useEffect for dir
-  useEffect(() => {
-    document.documentElement.dir = isRTL ? "rtl" : "ltr";
-  }, [isRTL]);
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
-    localStorage.setItem("language", lang);
   };
 
-  // Close desktop dropdown if clicked outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(e) {
       if (
@@ -52,16 +40,17 @@ export default function Navbar() {
         setMobileDropdownOpen(false);
       }
     }
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleLogout = (e) => {
-    e.stopPropagation(); // prevent dropdown from closing first
+    e.stopPropagation();
     localStorage.removeItem("access-token");
     setIsAuthenticated(false);
-    navigate("/login");
-    window.location.reload();
+
+    navigate("/login"); // ✅ enough, no reload
   };
 
   return (
@@ -72,26 +61,20 @@ export default function Navbar() {
         </div>
 
         <ul className="navbar-links">
-          <li>
-            <Link to="/">{t.home}</Link>
-          </li>
-          <li>
-            <Link to="/services">{t.services}</Link>
-          </li>
-          <li>
-            <Link to="/requests">{t.requests}</Link>
-          </li>
-          <li>
-            <Link to="/messages">{t.messages}</Link>
-          </li>
+          <li><Link to="/">{t.home}</Link></li>
+          <li><Link to="/services">{t.services}</Link></li>
+          <li><Link to="/requests">{t.requests}</Link></li>
+          <li><Link to="/messages">{t.messages}</Link></li>
         </ul>
 
         <div className="navbar-actions">
+          {/* 🌐 Language */}
           <div className="lang-switcher">
             <button onClick={() => handleLanguageChange("fr")}>FR</button>
             <button onClick={() => handleLanguageChange("ar")}>AR</button>
           </div>
 
+          {/* 🔐 Auth */}
           {!isAuthenticated ? (
             <div className="auth-buttons">
               <Link to="/login">
@@ -103,11 +86,10 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="auth-buttons dropdown" ref={desktopDropdownRef}>
-              <button
-                onClick={() => setDesktopDropdownOpen(!desktopDropdownOpen)}
-              >
+              <button onClick={() => setDesktopDropdownOpen(!desktopDropdownOpen)}>
                 {t.profile}
               </button>
+
               {desktopDropdownOpen && (
                 <div className="dropdown-menu">
                   <button className="btn-link danger" onClick={handleLogout}>
@@ -118,6 +100,7 @@ export default function Navbar() {
             </div>
           )}
 
+          {/* 🍔 Mobile */}
           <button
             className={`hamburger ${menuOpen ? "open" : ""}`}
             aria-label="Toggle menu"
@@ -131,6 +114,7 @@ export default function Navbar() {
         </div>
       </nav>
 
+      {/* 📱 Mobile menu */}
       <div className={`mobile-menu ${menuOpen ? "show" : ""}`}>
         <Link to="/">{t.home}</Link>
         <Link to="/services">{t.services}</Link>
@@ -142,6 +126,7 @@ export default function Navbar() {
             <button onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}>
               {t.profile}
             </button>
+
             {mobileDropdownOpen && (
               <div className="dropdown-menu">
                 <button className="btn-link danger" onClick={handleLogout}>

@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { fetchRegisterData } from "../../api/lookupApi";
 import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function RegisterForm({ onSwitchToLogin }) {
   const [role, setRole] = useState("client");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-  const { i18n } = useTranslation();
+  const { t } = useLanguage();
+  const i18n = localStorage.getItem("language");
+ 
 
   const [cities, setCities] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -34,6 +37,8 @@ export default function RegisterForm({ onSwitchToLogin }) {
           setCities(data.cities);
           setCategories(data.categories);
         }
+       
+        
       } catch (err) {
         console.error("Lookup loading failed", err);
         setError("Impossible de charger les villes et métiers");
@@ -43,7 +48,9 @@ export default function RegisterForm({ onSwitchToLogin }) {
     }
 
     load();
-    return () => { ignore = true; };
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   const handleChange = (e) => {
@@ -62,7 +69,7 @@ export default function RegisterForm({ onSwitchToLogin }) {
       phone: formData.phone,
       email: formData.email,
       password: formData.password,
-      role: role.toUpperCase(), // "CLIENT" or "ARTISAN"
+      role: role.toUpperCase(), 
       ...(role === "artisan" && {
         cityId: Number(formData.cityId),
         categoryId: Number(formData.categoryId),
@@ -70,7 +77,7 @@ export default function RegisterForm({ onSwitchToLogin }) {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/auth/register", {
+      const response = await fetch("http://localhost:8080/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -118,36 +125,36 @@ export default function RegisterForm({ onSwitchToLogin }) {
           className={`toggle-btn ${role === "client" ? "active" : ""}`}
           onClick={() => setRole("client")}
         >
-          Client
+          {t.auth.client}
         </button>
         <button
           type="button"
           className={`toggle-btn ${role === "artisan" ? "active" : ""}`}
           onClick={() => setRole("artisan")}
         >
-          Artisan
+          {t.auth.artisan}
         </button>
       </div>
 
       {/* Name fields */}
       <div className="form-row">
         <div className="form-group">
-          <label>Prénom</label>
+          <label>{t.auth.firstname}</label>
           <input
             type="text"
             name="firstname"
-            placeholder="Prénom"
+            placeholder={t.auth.firstname}
             value={formData.firstname}
             onChange={handleChange}
             required
           />
         </div>
         <div className="form-group">
-          <label>Nom</label>
+          <label>{t.auth.lastname}</label>
           <input
             type="text"
             name="lastname"
-            placeholder="Nom"
+            placeholder={t.auth.lastname}
             value={formData.lastname}
             onChange={handleChange}
             required
@@ -157,7 +164,7 @@ export default function RegisterForm({ onSwitchToLogin }) {
 
       {/* Phone */}
       <div className="form-group">
-        <label>Téléphone</label>
+        <label>{t.auth.phone}</label>
         <input
           type="tel"
           name="phone"
@@ -170,7 +177,7 @@ export default function RegisterForm({ onSwitchToLogin }) {
 
       {/* Email */}
       <div className="form-group">
-        <label>Email</label>
+        <label>{t.auth.email}</label>
         <input
           type="email"
           name="email"
@@ -183,7 +190,7 @@ export default function RegisterForm({ onSwitchToLogin }) {
 
       {/* Password */}
       <div className="form-group">
-        <label>Mot de passe</label>
+        <label>{t.auth.password}</label>
         <input
           type="password"
           name="password"
@@ -199,34 +206,34 @@ export default function RegisterForm({ onSwitchToLogin }) {
       {role === "artisan" && (
         <>
           <div className="form-group">
-            <label>Ville</label>
+            <label>{t.auth.city}</label>
             <select
               name="cityId"
               value={formData.cityId}
               onChange={handleChange}
               required
             >
-              <option value="">-- Choisir une ville --</option>
+              <option value="">{t.auth.selectCity}</option>
               {cities.map((city) => (
                 <option key={city.id} value={city.id}>
-                  {i18n.language === "ar" ? city.nameAr : city.nameFr}
+                  {i18n=== "ar" ? city.nameAr : city.nameFr}
                 </option>
               ))}
             </select>
           </div>
 
           <div className="form-group">
-            <label>Métier</label>
+            <label>{t.auth.job}</label>
             <select
               name="categoryId"
               value={formData.categoryId}
               onChange={handleChange}
               required
             >
-              <option value="">-- Choisir un métier --</option>
+              <option value="">{t.auth.selectJob}</option>
               {categories.map((cat) => (
                 <option key={cat.id} value={cat.id}>
-                  {i18n.language === "ar" ? cat.nameAr : cat.nameFr}
+                  {i18n === "ar" ? cat.nameAr : cat.nameFr}
                 </option>
               ))}
             </select>
