@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { fetchRegisterData } from "../../api/lookupApi";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../context/LanguageContext";
+import { registerUser } from "./AuthApi";
 
 export default function RegisterForm({ onSwitchToLogin }) {
   const [role, setRole] = useState("client");
@@ -17,8 +18,8 @@ export default function RegisterForm({ onSwitchToLogin }) {
   const [loadingLookup, setLoadingLookup] = useState(true);
 
   const [formData, setFormData] = useState({
-    firstname: "",
-    lastname: "",
+    firstName: "",
+    lastName: "",
     phone: "",
     email: "",
     password: "",
@@ -57,50 +58,39 @@ export default function RegisterForm({ onSwitchToLogin }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
 
-    // Build payload for backend
-    const payload = {
-      firstname: formData.firstname,
-      lastname: formData.lastname,
-      phone: formData.phone,
-      email: formData.email,
-      password: formData.password,
-      role: role.toUpperCase(), 
-      ...(role === "artisan" && {
-        cityId: Number(formData.cityId),
-        categoryId: Number(formData.categoryId),
-      }),
-    };
-
-    try {
-      const response = await fetch("http://localhost:8080/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.message || "Erreur lors de l'inscription");
-        return;
-      }
-
-      setSuccess(true);
-      setTimeout(() => {
-        onSwitchToLogin();
-      }, 2000);
-    } catch {
-      setError("Erreur de connexion au serveur");
-    } finally {
-      setLoading(false);
-    }
+  const payload = {
+    firstName: formData.firstName,
+    lastName: formData.lastName,
+    phone: formData.phone,
+    email: formData.email,
+    password: formData.password,
+    role: role.toUpperCase(),
+    ...(role === "artisan" && {
+      cityId: Number(formData.cityId),
+      categoryId: Number(formData.categoryId),
+    }),
   };
+
+  try {
+    await registerUser(payload);
+
+    setSuccess(true);
+
+    setTimeout(() => {
+      onSwitchToLogin();
+    }, 2000);
+
+  } catch (err) {
+    setError(err.message || "Erreur lors de l'inscription");
+  } finally {
+    setLoading(false);
+  }
+};
 
   if (loadingLookup) {
     return <p>Chargement des villes et métiers...</p>;
@@ -142,9 +132,9 @@ export default function RegisterForm({ onSwitchToLogin }) {
           <label>{t.auth.firstname}</label>
           <input
             type="text"
-            name="firstname"
+            name="firstName"
             placeholder={t.auth.firstname}
-            value={formData.firstname}
+            value={formData.firstName}
             onChange={handleChange}
             required
           />
@@ -153,9 +143,9 @@ export default function RegisterForm({ onSwitchToLogin }) {
           <label>{t.auth.lastname}</label>
           <input
             type="text"
-            name="lastname"
+            name="lastName"
             placeholder={t.auth.lastname}
-            value={formData.lastname}
+            value={formData.lastName}
             onChange={handleChange}
             required
           />
